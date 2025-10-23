@@ -1,3 +1,18 @@
+from sqlalchemy.orm import Mapped, mapped_column
+from ..db import db
+
+class Book(db.Model):
+    # Column names
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    title: Mapped[str]
+    description: Mapped[str]
+
+
+
+
+
+
+# WAVES 1-2 BELOW
 # Goal: client sends a request to get all existing books so they can see a list of books with their id, title, and description.
 
 # class Book:
