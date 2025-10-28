@@ -1,6 +1,7 @@
 import pytest
 from app import create_app
 from app.db import db
+from app.models.book import Book
 from flask.signals import request_finished
 from dotenv import load_dotenv
 import os
@@ -30,3 +31,17 @@ def app():
 @pytest.fixture
 def client(app):
     return app.test_client()
+
+@pytest.fixture
+def two_saved_books(app):
+    # Arrange
+    twilight = Book(title="Twilight",
+                    description="A supernatural romance about a teenage girl who falls in love with a mysterious vampire, blurring the line between danger and desire.")
+    new_moon = Book(title="New Moon",
+                        description="A heartbroken Bella faces loss, danger, and self-discovery after her vampire love disappears from her life.")
+
+    db.session.add_all([twilight, new_moon])
+    # Alternatively, we could do
+    # db.session.add(ocean_book)
+    # db.session.add(mountain_book)
+    db.session.commit()
