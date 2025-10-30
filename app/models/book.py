@@ -7,7 +7,9 @@ class Book(db.Model):
     title: Mapped[str]
     description: Mapped[str]
 
-
+    @classmethod
+    def from_dict(cls, book_data):
+        return Book(title=book_data['title'], description=book_data['description'])
 
 
 

@@ -9,11 +9,8 @@ def create_book():
     request_body = request.get_json()
     
     try:
-        title = request_body['title']
-        description = request_body['description']
+        new_book = Book.from_dict(request_body)
 
-        new_book = Book(title=title, description=description)
-    
     except KeyError as error:
         response = {'message':f"Invalid request: missing {error.args[0]}"}
         abort(make_response(response, 400))
