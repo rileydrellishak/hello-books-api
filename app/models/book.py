@@ -10,6 +10,13 @@ class Book(db.Model):
     @classmethod
     def from_dict(cls, book_data):
         return Book(title=book_data['title'], description=book_data['description'])
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'description': self.description
+            }
 
 
 
