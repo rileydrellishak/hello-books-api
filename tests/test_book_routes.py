@@ -1,5 +1,3 @@
-import pytest
-
 def test_get_all_books_with_no_records(client):
     # Act
     response = client.get("/books")
@@ -245,3 +243,4 @@ def test_delete_book_invalid_id(client, two_saved_books):
     # Assert
     assert response.status_code == 400
     assert response_body == {"message": "Book cat invalid"}
+
