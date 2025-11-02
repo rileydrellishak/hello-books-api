@@ -7,12 +7,12 @@ class Author(db.Model):
     books: Mapped[list["Book"]] = relationship(back_populates='author')
 
     def to_dict(self):
-        author_as_dict = {
+        author_dict = {
             "id": self.id,
             "name": self.name
         }
         
-        return author_as_dict
+        return author_dict
     
     @classmethod
     def from_dict(cls, author_data):

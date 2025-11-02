@@ -1,5 +1,6 @@
 from flask import Blueprint, abort, make_response, request, Response
 from app.models.book import Book
+from app.models.author import Author
 from ..db import db
 from .route_utilities import validate_model
 
