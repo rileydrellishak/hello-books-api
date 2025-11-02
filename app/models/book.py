@@ -15,14 +15,19 @@ class Book(db.Model):
     @classmethod
     def from_dict(cls, book_data):
         author_id = book_data.get('author_id')
-        new_book = cls(title=book_data['title'], description=book_data['description'], author_id=author_id)
+        
+        new_book = cls(
+            title=book_data['title'],
+            description=book_data['description'],
+            author_id=author_id)
+        
         return new_book
     
     def to_dict(self):
         book_as_dict = {}
 
         if self.author:
-            book_as_dict['author'] = self.author
+            book_as_dict['author'] = self.author.name
         
         book_as_dict['id'] = self.id
         book_as_dict['title'] = self.title

@@ -55,7 +55,6 @@ def create_book_with_author(author_id):
         response = {'message': f'Invalid request: mising {error.args[0]}'}
         abort(make_response(response, 400))
 
-
     db.session.add(new_book)
     db.session.commit()
 
