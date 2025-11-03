@@ -22,6 +22,11 @@ def create_author():
 
     return make_response(new_author.to_dict(), 201)
 
+@bp.get('/<author_id>')
+def get_author_by_id(author_id):
+    author = validate_model(Author, author_id)
+    return author.to_dict()
+
 @bp.get("")
 def get_all_authors():
     query = db.select(Author)
@@ -59,3 +64,22 @@ def create_book_with_author(author_id):
     db.session.commit()
 
     return make_response(new_book.to_dict(), 201)
+
+@bp.put('/<author_id>')
+def update_author(author_id):
+    author = validate_model(Author, author_id)
+    request_body = request.get_json()
+
+    author.title = request_body['name']
+    db.session.commit()
+
+    return Response(status=204, mimetype='applications/json')
+
+@bp.delete('/<author_id>')
+def delete_book(author_id):
+    author = validate_model(Author, author_id)
+
+    db.session.delete(author)
+    db.session.commit()
+
+    return Response(status=204, mimetype='application/json')

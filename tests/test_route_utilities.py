@@ -1,7 +1,8 @@
 from werkzeug.exceptions import HTTPException
 import pytest
 from app.models.book import Book
-from app.routes.route_utilities import validate_model
+from app.models.author import Author
+from app.routes.route_utilities import validate_model, create_model
 
 def test_validate_model(two_saved_books):
     # Act
@@ -29,5 +30,77 @@ def test_validate_model_invalid_id(two_saved_books):
     with pytest.raises(HTTPException) as error:
         result_book = validate_model(Book, "cat")
     
+    response = error.value.response
+    assert response.status == "400 BAD REQUEST"
+
+def test_create_model_book(client):
+    test_data = {
+        'title': 'Twilight',
+        'description': 'A captivating love story between a human girl and a vampire whose worlds are never meant to collide.'
+    }
+    result = create_model(Book, test_data)
+
+    assert result.status_code == 201
+    assert result.get_json() == {
+        'id': 1,
+        'title': 'Twilight',
+        'description': 'A captivating love story between a human girl and a vampire whose worlds are never meant to collide.'
+    }
+
+
+def test_create_model_book_extra_keys(client):
+    test_data = {
+        'title': 'Twilight',
+        'description': 'A captivating love story between a human girl and a vampire whose worlds are never meant to collide.',
+        'where to buy': 'Barnes & Noble'
+    }
+    result = create_model(Book, test_data)
+
+    assert result.status_code == 201
+    assert result.get_json() == {
+        'id': 1,
+        'title': 'Twilight',
+        'description': 'A captivating love story between a human girl and a vampire whose worlds are never meant to collide.'
+    }
+
+def test_create_model_book_missing_keys(client):
+    test_data = {
+        'title': 'Twilight'
+        }
+    
+    with pytest.raises(HTTPException) as error:
+        result_book = create_model(Book, test_data)
+
+    response = error.value.response
+    assert response.status == "400 BAD REQUEST"
+
+def test_create_model_author(client):
+    test_data = {
+        'name': 'Stephanie Meyer'
+    }
+
+    result = create_model(Author, test_data)
+    
+    assert result.status_code == 201
+    assert result.get_json() == {
+        'id': 1,
+        'name': 'Stephanie Meyer'
+    }
+
+def test_create_model_author_extra_keys(client):
+    test_data = {
+        'name': 'Stephanie Meyer'
+    }
+
+    result = create_model(Author, test_data)
+
+def test_create_model_author_missing_data(client):
+    test_data = {
+        'name': 'Stephanie Meyer'
+    }
+
+    with pytest.raises(HTTPException) as error:
+        result_book = create_model(Book, test_data)
+
     response = error.value.response
     assert response.status == "400 BAD REQUEST"
