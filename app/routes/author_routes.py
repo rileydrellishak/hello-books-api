@@ -2,7 +2,7 @@ from flask import Blueprint, abort, make_response, request, Response
 from app.models.author import Author
 from app.models.book import Book
 from ..db import db
-from .route_utilities import validate_model, create_model
+from .route_utilities import validate_model, create_model, get_models_with_filters
 
 bp = Blueprint('author_bp', __name__, url_prefix='/authors')
 
@@ -18,17 +18,7 @@ def get_author_by_id(author_id):
 
 @bp.get("")
 def get_all_authors():
-    query = db.select(Author)
-
-    name_param = request.args.get("name")
-    if name_param:
-        query = query.where(Author.name.ilike(f"%{name_param}%"))
-
-    authors = db.session.scalars(query.order_by(Author.id))
-    # Use list comprehension syntax to create the list `authors_response`
-    authors_response = [author.to_dict() for author in authors]
-
-    return authors_response
+    return get_models_with_filters(Author, request.args)
 
 @bp.get('/<author_id>/books')
 def get_books_by_author(author_id):
@@ -41,7 +31,7 @@ def create_book_with_author(author_id):
     author = validate_model(Author, author_id)
     request_body = request.get_json()
     request_body['author_id'] = author.id
-    
+
     return create_model(Book, request_body)
 
 @bp.put('/<author_id>')

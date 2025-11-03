@@ -17,9 +17,6 @@ def validate_model(cls, model_id):
     
     return model
 
-# Move code that creates and returns a JSON representation of a model to a new function named create_model in route_utilities.py
-
-# Move all the common code from create author, create book with author, create book
 def create_model(cls, model_data):
 
     try:
@@ -35,3 +32,17 @@ def create_model(cls, model_data):
     return make_response(new_instance.to_dict(), 201)
 
 # Move code that queries, filters, and returns a JSON representation of model records to a new function named get_models_with_filters in route_utilities.py
+
+def get_models_with_filters(cls, filters=None):
+    query = db.select(cls)
+
+    if filters:
+        for attribute, value in filters.items():
+            if hasattr(cls, attribute):
+                query = query.where(getattr(cls, attribute).ilike(f"%{value}%"))
+
+    query = query.order_by(cls.id)
+    models = db.session.scalars(query)
+
+    response = [model.to_dict() for model in models]
+    return response

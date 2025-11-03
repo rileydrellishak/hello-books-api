@@ -74,7 +74,7 @@ def test_get_all_authors_two_records(client, two_saved_authors):
     }
     assert response_body[1] == {
         'id': 2,
-        'name': 'Stephanie Meyer'
+        'name': 'Stephenie Meyer'
     }
 
 def test_get_all_authors_with_name_query_matching_one(client, two_saved_authors):

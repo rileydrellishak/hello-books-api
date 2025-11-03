@@ -50,7 +50,7 @@ def two_saved_books(app):
 @pytest.fixture
 def two_saved_authors(app):
     rfkuang = Author(name='R.F. Kuang')
-    smeyer = Author(name='Stephanie Meyer')
+    smeyer = Author(name='Stephenie Meyer')
 
     db.session.add_all([rfkuang, smeyer])
     db.session.commit()
@@ -58,7 +58,7 @@ def two_saved_authors(app):
 @pytest.fixture
 def three_saved_authors(app):
     rfkuang = Author(name='R.F. Kuang')
-    smeyer = Author(name='Stephanie Meyer')
+    smeyer = Author(name='Stephenie Meyer')
     scollins = Author(name='Suzanne Collins')
 
     db.session.add_all([rfkuang, smeyer, scollins])

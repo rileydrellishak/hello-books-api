@@ -2,7 +2,7 @@ from flask import Blueprint, abort, make_response, request, Response
 from app.models.book import Book
 from app.models.author import Author
 from ..db import db
-from .route_utilities import validate_model, create_model
+from .route_utilities import validate_model, create_model, get_models_with_filters
 
 bp = Blueprint('books_bp', __name__, url_prefix='/books')
 
@@ -13,25 +13,7 @@ def create_book():
 
 @bp.get('')
 def get_all_books():
-    query = db.select(Book)
-
-    title_param = request.args.get('title')
-    if title_param:
-        query = query.where(Book.title.ilike(f"%{title_param}%"))
-    
-    description_param = request.args.get("description")
-    if description_param:
-        query = query.where(Book.description.ilike(f"%{description_param}%"))
-        
-    query = query.order_by(Book.id)
-    books = db.session.scalars(query)
-
-    # or db.session.execute(query).scalars()
-
-    books_response = []
-    for book in books:
-        books_response.append(book.to_dict())
-    return books_response
+    return get_models_with_filters(Book, request.args)
 
 @bp.get('/<book_id>')
 def get_one_book(book_id):
@@ -57,43 +39,3 @@ def delete_book(book_id):
     db.session.commit()
 
     return Response(status=204, mimetype='application/json')
-
-# WAVES 1-2
-# from app.models.book import books
-# @bp.get('')
-# def get_all_books():
-#     books_response = []
-#     for book in books:
-#         books_response.append(
-#             {
-#                 'id': book.id,
-#                 'title': book.title,
-#                 'description': book.description
-#             }
-#         )
-#     return books_response
-
-# @bp.get('/<book_id>')
-# def get_one_book(book_id):
-#     book = validate_model(Book, book_id)
-    
-#     return {
-#             'id': book.id,
-#             'title': book.title,
-#             'description': book.description
-#         }
-
-# def validate_model(Bookbook_id):
-#     try:
-#         book_id = int(book_id)
-        
-#     except:
-#         response = {'message': f'book {book_id} invalid'}
-#         abort(make_response(response, 400))
-    
-#     for book in books:
-#         if book.id == book_id:
-#             return book
-    
-#     response = {'message': f'book {book_id} not found'}
-#     abort(make_response(response, 404))
