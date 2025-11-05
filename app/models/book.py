@@ -39,6 +39,14 @@ class Book(db.Model):
         book_as_dict['description'] = self.description
         
         return book_as_dict
+    
+    def update_book(self, book_data):
+        for attr, value in book_data.items():
+            if hasattr(self, attr):
+                self.attr = value
+
+        db.session.commit()
+
 
 
 
