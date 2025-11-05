@@ -1,6 +1,8 @@
 from flask import Blueprint, request
 from app.models.genre import Genre
-from .route_utilities import create_model, get_models_with_filters
+from app.models.book import Book
+from .route_utilities import create_model, get_models_with_filters, validate_model
+from ..db import db
 
 bp = Blueprint("genres_bp", __name__, url_prefix="/genres")
 
@@ -12,3 +14,12 @@ def create_genre():
 @bp.get("")
 def get_all_genres():
     return get_models_with_filters(Genre, request.args)
+
+@bp.post('/<genre_id>/books')
+def create_book_of_specific_genre(genre_id):
+    genre = validate_model(Genre, genre_id)
+
+    request_body = request.get_json()
+    request_body['genre_id'] = genre.id
+    
+    return create_model(Book, request_body)
