@@ -5,6 +5,7 @@ from .routes.book_routes import bp as books_bp
 from .routes.genre_routes import bp as genre_bp
 import os
 from .models.genre import Genre
+from .models.bookgenre import BookGenre
 
 def create_app(config=None):
     app = Flask(__name__)

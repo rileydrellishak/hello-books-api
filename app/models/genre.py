@@ -1,12 +1,11 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey
-from typing import Optional
 from ..db import db
 
 class Genre(db.Model):
     # Column names
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str]
+    books: Mapped[list['Book']] = relationship(secondary='book_genre', back_populates='genres')
 
     @classmethod
     def from_dict(cls, genre_data):
