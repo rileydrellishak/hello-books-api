@@ -11,9 +11,6 @@ def create_genre():
     request_body = request.get_json()
     return create_model(Genre, request_body)
 
-@bp.get("")
-def get_all_genres():
-    return get_models_with_filters(Genre, request.args)
 
 @bp.post('/<genre_id>/books')
 def create_book_of_specific_genre(genre_id):
@@ -21,5 +18,15 @@ def create_book_of_specific_genre(genre_id):
 
     request_body = request.get_json()
     request_body['genre_id'] = genre.id
-    
+
     return create_model(Book, request_body)
+
+@bp.get("")
+def get_all_genres():
+    return get_models_with_filters(Genre, request.args)
+
+@bp.get('/<genre_id>/books')
+def get_all_books_of_a_genre(genre_id):
+    genre = validate_model(Genre, genre_id)
+    response = [book.to_dict() for book in genre.books]
+    return response
